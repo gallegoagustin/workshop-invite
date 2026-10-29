@@ -1,0 +1,403 @@
+---
+const schedule = [
+  {
+    day: "Sábado",
+    items: [
+      { time: "10:30", title: "Café y kickoff", note: "Elegís qué app querés que exista en el mundo." },
+      { time: "11:00", title: "IA 101", note: "Cómo pedirle cosas a la IA sin que te entienda al revés." },
+      { time: "11:45", title: "Primera app", note: "Una peque, para entrar en calor." },
+      { time: "14:00", title: "Almuerzo", note: "No negociable. Invito yo." },
+      { time: "15:30", title: "Segunda app", note: "La que elegiste más temprano." },
+      { time: "16:30", title: "Pausa de matcha / bowl de yogurt", note: "Recarga obligatoria." },
+      { time: "17:30", title: "Demo y entrega de diploma", note: "Vibe Coder certificada, con aplausos del público (yo)." },
+      { time: "Extra", title: "Publicación en internet", note: "Opcional. Link propio para mandarle a quien quieras." },
+    ],
+  },
+];
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tenés una invitación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,800;1,9..144,500&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main class="card">
+      <p class="eyebrow">Invitación oficial · Este sábado</p>
+      <h1>
+        ¿Querés venir a mi <em>workshop</em> de apps con inteligencia artificial?
+      </h1>
+      <p class="lead">
+        Un sábado, cupo para una sola persona (vos), café ilimitado y al final te llevás una app hecha
+        por vos. Sin saber programar.
+      </p>
+
+      <div class="actions">
+        <button id="yes" class="btn btn-yes" type="button">Sí</button>
+        <button id="no" class="btn btn-no" type="button" tabindex="-1">No</button>
+      </div>
+      <p class="fineprint">* La organización no se hace responsable si el botón "No" no colabora.</p>
+    </main>
+
+    <dialog id="modal">
+      <section id="step-surprise" class="step">
+        <p class="big">¿En serio?</p>
+        <p>Pensé que ibas a decir que no.</p>
+        <button id="to-schedule" class="btn btn-yes" type="button">Ver el cronograma</button>
+      </section>
+
+      <section id="step-schedule" class="step" hidden>
+        <p class="eyebrow">Cronograma del workshop</p>
+        {
+          schedule.map((block) => (
+            <div class="day">
+              <h2>{block.day}</h2>
+              <ol>
+                {block.items.map((item) => (
+                  <li>
+                    <span class="time">{item.time}</span>
+                    <span>
+                      <strong>{item.title}</strong>
+                      <small>{item.note}</small>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))
+        }
+        <p class="fineprint">Dress code: pijama aceptado.</p>
+        <button id="close" class="btn btn-ghost" type="button">Cerrar</button>
+      </section>
+    </dialog>
+
+    <div id="confetti" aria-hidden="true"></div>
+
+    <style is:global>
+      :root {
+        --bg: #fff4ec;
+        --ink: #2b1a1f;
+        --muted: #7a5f66;
+        --accent: #ff4f6d;
+        --accent-dark: #d93453;
+        --card: #ffffff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+      body {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 16px;
+        background:
+          radial-gradient(circle at 15% 20%, #ffd6de 0, transparent 40%),
+          radial-gradient(circle at 85% 80%, #ffe3c2 0, transparent 40%),
+          var(--bg);
+        color: var(--ink);
+        font-family: "DM Sans", system-ui, sans-serif;
+        overflow: hidden;
+      }
+      .card {
+        width: min(560px, 100%);
+        background: var(--card);
+        border-radius: 28px;
+        padding: clamp(28px, 6vw, 48px);
+        box-shadow: 0 30px 60px -30px rgba(120, 30, 50, 0.35);
+        text-align: center;
+      }
+      .eyebrow {
+        margin: 0 0 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      h1 {
+        margin: 0 0 16px;
+        font-family: "Fraunces", serif;
+        font-weight: 800;
+        font-size: clamp(1.8rem, 6vw, 2.6rem);
+        line-height: 1.1;
+      }
+      h1 em {
+        font-weight: 500;
+        color: var(--accent);
+      }
+      .lead {
+        margin: 0 auto 32px;
+        max-width: 42ch;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .actions {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        align-items: center;
+        min-height: 64px;
+      }
+      .btn {
+        font: inherit;
+        font-weight: 700;
+        font-size: 1.05rem;
+        border: 0;
+        border-radius: 999px;
+        padding: 14px 36px;
+        cursor: pointer;
+      }
+      .btn-yes {
+        background: var(--accent);
+        color: #fff;
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease;
+        transform: scale(var(--grow, 1));
+      }
+      .btn-yes:hover {
+        background: var(--accent-dark);
+      }
+      .btn-no {
+        background: #f1e6e8;
+        color: var(--muted);
+        transition:
+          left 0.25s cubic-bezier(0.2, 0.8, 0.2, 1.2),
+          top 0.25s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+        z-index: 10;
+      }
+      .btn-no.escaping {
+        position: fixed;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+      .fineprint {
+        margin: 24px 0 0;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      dialog {
+        width: min(520px, calc(100% - 32px));
+        max-height: calc(100dvh - 32px);
+        border: 0;
+        border-radius: 24px;
+        padding: 32px;
+        color: var(--ink);
+        text-align: center;
+      }
+      dialog::backdrop {
+        background: rgba(43, 26, 31, 0.5);
+        backdrop-filter: blur(4px);
+      }
+      dialog[open] {
+        animation: pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+      }
+      .big {
+        margin: 0;
+        font-family: "Fraunces", serif;
+        font-weight: 800;
+        font-size: 2.4rem;
+      }
+      .step > p {
+        margin-top: 8px;
+      }
+      #step-surprise .btn {
+        margin-top: 16px;
+      }
+      .day {
+        text-align: left;
+        margin-bottom: 20px;
+      }
+      .day h2 {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 500;
+        margin: 0 0 8px;
+        color: var(--accent);
+      }
+      .day ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .day li {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px dashed #eadbdf;
+      }
+      .day li:last-child {
+        border-bottom: 0;
+      }
+      .time {
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .day small {
+        display: block;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      #confetti {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1000;
+      }
+      .piece {
+        position: absolute;
+        top: -20px;
+        width: 10px;
+        height: 14px;
+        border-radius: 2px;
+        animation: fall linear forwards;
+      }
+
+      @keyframes pop {
+        from {
+          transform: scale(0.85);
+          opacity: 0;
+        }
+      }
+      @keyframes fall {
+        to {
+          transform: translate3d(var(--drift), 110vh, 0) rotate(var(--spin));
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .btn-no {
+          transition: none;
+        }
+        dialog[open] {
+          animation: none;
+        }
+      }
+    </style>
+
+    <script>
+      const yes = document.getElementById("yes") as HTMLButtonElement;
+      const no = document.getElementById("no") as HTMLButtonElement;
+      const modal = document.getElementById("modal") as HTMLDialogElement;
+      const surprise = document.getElementById("step-surprise") as HTMLElement;
+      const scheduleStep = document.getElementById("step-schedule") as HTMLElement;
+      const confetti = document.getElementById("confetti") as HTMLElement;
+
+      const taunts = ["No", "¿Segura?", "Casi", "Ni lo intentes", "Muy lenta", "Agus es increíble", "Nop", "Jaja", "Rendite"];
+      const DANGER_ZONE = 110;
+      const MARGIN = 16;
+      const MOVE_MS = 300;
+      let attempts = 0;
+      let moving = false;
+
+      function escape(fromX: number, fromY: number) {
+        // Mientras vuela, pointermove sigue disparando: sin este freno cambia el texto varias veces por huida.
+        if (moving) return;
+        moving = true;
+        setTimeout(() => (moving = false), MOVE_MS);
+
+        const rect = no.getBoundingClientRect();
+        if (!no.classList.contains("escaping")) {
+          // Fija la posición actual antes de pasar a fixed para que la primera huida también anime.
+          no.style.left = `${rect.left}px`;
+          no.style.top = `${rect.top}px`;
+          no.classList.add("escaping");
+          void no.offsetWidth;
+        }
+
+        const maxX = window.innerWidth - rect.width - MARGIN;
+        const maxY = window.innerHeight - rect.height - MARGIN;
+        let x = 0;
+        let y = 0;
+        // Busca un destino lejos del puntero.
+        for (let i = 0; i < 20; i++) {
+          x = MARGIN + Math.random() * (maxX - MARGIN);
+          y = MARGIN + Math.random() * (maxY - MARGIN);
+          const dx = x + rect.width / 2 - fromX;
+          const dy = y + rect.height / 2 - fromY;
+          if (Math.hypot(dx, dy) > DANGER_ZONE * 2.5) break;
+        }
+        no.style.left = `${x}px`;
+        no.style.top = `${y}px`;
+
+        attempts++;
+        no.textContent = taunts[attempts % taunts.length];
+        yes.style.setProperty("--grow", String(Math.min(1 + attempts * 0.06, 1.8)));
+      }
+
+      document.addEventListener("pointermove", (e) => {
+        const r = no.getBoundingClientRect();
+        const cx = Math.max(r.left, Math.min(e.clientX, r.right));
+        const cy = Math.max(r.top, Math.min(e.clientY, r.bottom));
+        if (Math.hypot(e.clientX - cx, e.clientY - cy) < DANGER_ZONE) escape(e.clientX, e.clientY);
+      });
+
+      // En táctil no hay hover: huye al primer toque, antes del click.
+      no.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        escape(e.clientX, e.clientY);
+      });
+      no.addEventListener("click", (e) => {
+        e.preventDefault();
+        const r = no.getBoundingClientRect();
+        escape(r.left + r.width / 2, r.top + r.height / 2);
+      });
+
+      window.addEventListener("resize", () => {
+        if (!no.classList.contains("escaping")) return;
+        const r = no.getBoundingClientRect();
+        no.style.left = `${Math.min(r.left, window.innerWidth - r.width - MARGIN)}px`;
+        no.style.top = `${Math.min(r.top, window.innerHeight - r.height - MARGIN)}px`;
+      });
+
+      function launchConfetti() {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const colors = ["#ff4f6d", "#ffb703", "#8ecae6", "#b5e48c", "#cdb4db"];
+        for (let i = 0; i < 120; i++) {
+          const piece = document.createElement("span");
+          piece.className = "piece";
+          piece.style.left = `${Math.random() * 100}vw`;
+          piece.style.background = colors[i % colors.length];
+          piece.style.animationDuration = `${2 + Math.random() * 2}s`;
+          piece.style.animationDelay = `${Math.random() * 0.6}s`;
+          piece.style.setProperty("--drift", `${(Math.random() - 0.5) * 200}px`);
+          piece.style.setProperty("--spin", `${Math.random() * 720}deg`);
+          piece.addEventListener("animationend", () => piece.remove());
+          confetti.appendChild(piece);
+        }
+      }
+
+      yes.addEventListener("click", () => {
+        surprise.hidden = false;
+        scheduleStep.hidden = true;
+        modal.showModal();
+        launchConfetti();
+      });
+
+      document.getElementById("to-schedule")!.addEventListener("click", () => {
+        surprise.hidden = true;
+        scheduleStep.hidden = false;
+        modal.scrollTop = 0;
+      });
+
+      document.getElementById("close")!.addEventListener("click", () => modal.close());
+    </script>
+  </body>
+</html>
